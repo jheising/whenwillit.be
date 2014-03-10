@@ -1,0 +1,186 @@
+@font-face {
+    font-family: 'Bebas';
+    src: url('fonts/Bebas.eot');
+    src: url('fonts/Bebas.eot?#iefix') format('embedded-opentype'),
+    url('fonts/Bebas.woff') format('woff'),
+    url('fonts/Bebas.ttf') format('truetype'),
+    url('fonts/Bebas.svg#Bebas') format('svg');
+}
+
+html, body
+{
+    color: #fff;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Helvetica Neue', 'Helvetica-Neue', 'Helvetica', 'arial', sans-serif;
+}
+
+.big-text
+{
+    font-weight:100;
+    font-size: 36px;
+    line-height: 1.1;
+}
+
+.small-text
+{
+    font-weight:100;
+    font-size: 15px;
+}
+
+.container
+{
+    z-index: 100;
+}
+
+#backgound-container
+{
+    top: 0px;
+    left: 0px;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.full-background {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background:url(../img/backgrounds/rain.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#background-pattern {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    background: url(../img/bg-pattern.png) top right repeat;
+    width: 100%;
+    height: 100%;
+}
+
+#noun-list-wrapper
+{
+    overflow: hidden;
+    height: 100%;
+}
+
+#noun-list-container
+{
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: 150%;
+}
+
+#main-container
+{
+    height: 100%;
+}
+
+#noun-list li
+{
+    margin-bottom: 25px;
+    cursor: pointer;
+    width: auto;
+}
+
+textarea:focus, input:focus{
+    outline: 0;
+    border: 0;
+}
+
+#questionmark
+{
+    position: absolute;
+    top: 0px;
+    right: 12px;
+}
+
+#search-field-container
+{
+    position: absolute;
+    top: -9px;
+    left: 0;
+    border: 1px rgba(255,255,255,0.1) solid;
+    width: 100%;
+}
+
+.row.space
+{
+    margin-bottom: 15px;
+}
+
+#search-field
+{
+    width: 87%;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    padding: 5px 0px 10px 13px;
+}
+
+#response
+{
+    position: relative;
+    top: 172px;
+}
+
+#answer-source-container
+{
+    position: absolute;
+    left:0;
+    top:-40px;
+}
+
+#answer-time
+{
+    font-family: 'Bebas', sans-serif;
+    font-size: 72px;
+}
+
+#loader
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding-top: 9px;
+    padding-left: 18px;
+}
+
+#countdown
+{
+    font-family: 'Bebas', sans-serif;
+    font-size: 11px;
+}
+
+#countdown span
+{
+    font-family: 'Bebas', sans-serif;
+    font-size: 25px;
+    margin-right: 5px;
+}
+
+#countdown div.slash
+{
+    display: inline;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+@media (max-width: 1200px) {
+
+    .big-text
+    {
+        font-size: 25px;
+    }
+
+    #answer-time
+    {
+        font-size: 36px;
+    }
+
+}
