@@ -9,6 +9,7 @@
 
 html, body
 {
+    -webkit-font-smoothing: subpixel-antialiased;
     color: #fff;
     height: 100%;
     overflow: hidden;
@@ -25,7 +26,7 @@ html, body
 
 .small-text
 {
-    font-weight:100;
+    font-weight:200;
     font-size: 15px;
 }
 
@@ -88,9 +89,8 @@ html, body
     width: auto;
 }
 
-textarea:focus, input:focus{
+textarea:focus, input:focus, button:focus{
     outline: 0;
-    border: 0;
 }
 
 #questionmark
@@ -105,7 +105,7 @@ textarea:focus, input:focus{
     position: absolute;
     top: -9px;
     left: 0;
-    border: 1px rgba(255,255,255,0.1) solid;
+    border: 1px rgba(255,255,255,0.2) solid;
     width: 100%;
 }
 
@@ -140,6 +140,7 @@ textarea:focus, input:focus{
 {
     font-family: 'Bebas', sans-serif;
     font-size: 72px;
+    -webkit-font-smoothing: antialiased;
 }
 
 #loader
@@ -155,6 +156,8 @@ textarea:focus, input:focus{
 {
     font-family: 'Bebas', sans-serif;
     font-size: 11px;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 2px;
 }
 
 #countdown span
@@ -162,6 +165,7 @@ textarea:focus, input:focus{
     font-family: 'Bebas', sans-serif;
     font-size: 25px;
     margin-right: 5px;
+    -webkit-font-smoothing: antialiased;
 }
 
 #countdown div.slash
@@ -169,6 +173,63 @@ textarea:focus, input:focus{
     display: inline;
     margin-left: 5px;
     margin-right: 5px;
+}
+
+#address-input
+{
+    width: 75%;
+    max-width: 320px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgba(0,0,0,0.5);
+    border: 1px rgba(255,255,255,0.5) solid;
+    height: 36px;
+}
+
+#address-find-button
+{
+    background-color: rgba(0,0,0,0.5);
+    border: 1px rgba(255,255,255,0.5) solid;
+    border-left: none;
+    height: 36px;
+    width: 62px;
+}
+
+#address-lookup-error
+{
+    color: #E9C25D;
+}
+
+#address-results
+{
+    padding-top: 5px;
+    background-color: rgba(0,0,0,0.5);
+    border: 1px rgba(255,255,255,0.5) solid;
+    display: none;
+    width: 382px;
+    border-top: none;
+    max-height: 160px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#address-results li
+{
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+}
+
+#address-results a
+{
+    cursor: pointer;
+}
+
+#address-find-button:hover
+{
+    background-color: rgba(255,255,255,0.5);
 }
 
 @media (max-width: 1200px) {

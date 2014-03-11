@@ -3,6 +3,7 @@ var wwibActions =
     {
         "wwib" : "sunny",
         "function" : "sunny",
+        "requires_position" : true,
         "source" : {
             "name" : "openweathermap.org",
             "url" : "http://openweathermap.org/"
@@ -12,6 +13,7 @@ var wwibActions =
     {
         "wwib" : "rainy",
         "function" : "rainy",
+        "requires_position" : true,
         "source" : {
             "name" : "openweathermap.org",
             "url" : "http://openweathermap.org/"
@@ -21,6 +23,7 @@ var wwibActions =
     {
         "wwib" : "clear",
         "function" : "clear",
+        "requires_position" : true,
         "source" : {
             "name" : "openweathermap.org",
             "url" : "http://openweathermap.org/"
@@ -30,6 +33,7 @@ var wwibActions =
     {
         "wwib" : "cloudy",
         "function" : "cloudy",
+        "requires_position" : true,
         "source" : {
             "name" : "openweathermap.org",
             "url" : "http://openweathermap.org/"
@@ -39,21 +43,25 @@ var wwibActions =
     {
         "wwib" : "sunrise",
         "function" : "day",
+        "requires_position" : true,
         "backgrounds" : ["http://farm4.staticflickr.com/3662/3305640342_6348a5a71e_b.jpg"]
     },
     {
         "wwib" : "sunset",
         "function" : "night",
+        "requires_position" : true,
         "backgrounds" : ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
     },
     {
-        "wwib" : "full moon",
+        "wwib" : "a full moon",
         "function" : "fullMoon",
+        "requires_position" : false,
         "backgrounds" : ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
     },
     {
-        "wwib" : "new moon",
+        "wwib" : "a new moon",
         "function" : "newMoon",
+        "requires_position" : false,
         "backgrounds" : ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
     }
 ];

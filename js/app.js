@@ -8,8 +8,11 @@ $(function () {
     var _showingAllNouns = true;
     var isDragging = false;
     var scrollTimer;
-    var userLat = 47.6388;
-    var userLon = -121.9598;
+    var userLat = $.cookie('user_lat') ? Number($.cookie('user_lat')) : undefined;
+    var userLon = $.cookie('user_lon') ? Number($.cookie('user_lon')) : undefined;
+    var userPlaceName = $.cookie('place_name');
+
+    var locationFound = (userLat && userLon) ? true : false;
 
     function updateOverscroll() {
         var newSize = $(window).height() - topClearance - 50;
@@ -20,39 +23,48 @@ $(function () {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function locationSuccess(position) {
-        userLat = position.coords.latitude;
-        userLon = position.coords.longitude;
+    function setPlacename(placeName)
+    {
+        $.cookie('place_name', placeName, { expires: 365, path: '/' });
+        userPlaceName = placeName;
     }
 
-    function locationError(error) {
-        switch (error.code) {
-            case error.TIMEOUT:
-                //showError("A timeout occured! Please try again!");
-                break;
-            case error.POSITION_UNAVAILABLE:
-                //showError('We can\'t detect your location. Sorry!');
-                break;
-            case error.PERMISSION_DENIED:
-                //showError('Please allow geolocation access for this to work.');
-                break;
-            case error.UNKNOWN_ERROR:
-                //showError('An unknown error occured!');
-                break;
+    function setUserLocation(lat, lon, placeName)
+    {
+        $.cookie('user_lat', lat.toString(), { expires: 365, path: '/' });
+        $.cookie('user_lon', lon.toString(), { expires: 365, path: '/' });
+
+        if(placeName)
+        {
+            setPlacename(placeName);
         }
 
+        userLat = lat;
+        userLon = lon;
+        locationFound = true;
     }
 
     // Does this browser support geolocation?
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
-    }
-    else {
-        showError("Your browser does not support Geolocation!");
+        navigator.geolocation.getCurrentPosition(function(position){
+            setUserLocation(position.coords.latitude, position.coords.longitude);
+        }, function(error){
+
+        });
     }
 
     $("#loader").hide();
     $(".top-clearance").css({marginTop: topClearance});
+
+    function displayMessage(bigText, tinyText)
+    {
+        $("#countdown").hide();
+        $("#answer-source-container").hide();
+        $("#answer-time").text(bigText);
+        $("#answer-full-time").html(tinyText);
+
+        $("#response").fadeIn();
+    }
 
     function displayAnswer(source, what, when) {
         var now = new Date();
@@ -80,6 +92,82 @@ $(function () {
         $("#response").fadeIn();
     }
 
+    function processGeoLocationClick(event)
+    {
+        var geolocation = $(event.target).data("location");
+        setUserLocation(geolocation.geometry.location.lat(), geolocation.geometry.location.lng());
+
+        if(selectedActionElement)
+        {
+            processSelectedAction(selectedActionElement);
+        }
+    }
+
+    function displayAddressFinder()
+    {
+        var locationMessage = "<p>We need to know your location before we can give you an answer. Try refreshing your browser after a few seconds or type your address or place here:</p>";
+        locationMessage += '<p><div><input id="address-input"><button id="address-find-button">FIND</button></div><div id="address-results"></div></p>';
+        locationMessage += '<p id="address-lookup-error"></p>';
+
+        $("#loader").hide();
+        displayMessage("WHERE ARE YOU?", locationMessage);
+
+        $('#address-input').keypress(function (e) {
+            if (e.which == 13) {
+                $("#address-find-button").trigger("click");
+            }
+        });
+
+        $("#address-find-button").click(function()
+        {
+            $("#address-lookup-error").hide();
+            $("#address-find-button").prop('disabled', true);
+
+            var counter = 1;
+            var loadingTimer = setInterval(function(){
+
+                $("#address-find-button").text(Array(counter + 1).join("."));
+
+                counter++;
+
+                if(counter >= 7)
+                {
+                    counter = 1;
+                }
+            }, 1000);
+
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ 'address': $("#address-input").val() }, function(results, status) {
+
+                clearInterval(loadingTimer);
+                $("#address-find-button").prop('disabled', false).text("FIND");
+
+                if (status == google.maps.GeocoderStatus.OK)
+                {
+                    var resultsList = $('<ul class="list-unstyled"></ul>');
+
+                    $("#address-results").empty().append(resultsList).show();
+
+                    resultsList.append($("<li>Select one:</li>"));
+
+                    _.each(results, function(result){
+                        var resultElement = $("<a></a>").text(result.formatted_address).data("location", result).click(processGeoLocationClick);
+                        resultsList.append($("<li></li>").append(resultElement));
+                    });
+                }
+                else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+                    $("#address-lookup-error").text("Oops. We couldn't find this place. Try something else?").show();
+                }
+                else
+                {
+                    $("#address-lookup-error").text("Oops, something went wrong. Try again.").show();
+                }
+            });
+
+        });
+    }
+
     function startCountdownTimer(date) {
         $('#countdown').css({opacity: 1.0}).countdown(date, function (event) {
             $this = $(this);
@@ -103,14 +191,6 @@ $(function () {
 
     function stopCountdownTimer() {
         $("#countdown").hide();
-        /*try
-         {
-         $("#countdown").hide().countdown("stop");
-         }
-         catch(e)
-         {
-         console.log(e);
-         }*/
     }
 
     function processSelectedAction(element) {
@@ -119,9 +199,14 @@ $(function () {
         var action = element.data("action");
 
         // Update Google analytics
-        if(action.wwib)
+        if(action && action.wwib)
         {
+            location.hash = "#" + action.wwib;
             ga('send', 'event', 'action', 'completed', action.wwib);
+        }
+        else
+        {
+            location.hash = "";
         }
 
         stopCountdownTimer();
@@ -134,6 +219,13 @@ $(function () {
                 $("#loader").show();
 
                 currentAction = action.function;
+
+                // Does this action require location data?
+                if(action.requires_position && !locationFound)
+                {
+                    return displayAddressFinder();
+                }
+
                 wwib[action.function](function (err, response) {
 
                     // Ignore this response if it's old
@@ -212,11 +304,11 @@ $(function () {
     }
 
     // If the user starts typing, show search box
-    $(document).keypress(function (e) {
+    /*$(document).keypress(function (e) {
         if (!$("#search-field").is(":focus")) {
             $("#search-field").focus();
         }
-    });
+    });*/
 
     $("#search-field").focus(function () {
         $("#noun-list-container").scrollTop(0);
