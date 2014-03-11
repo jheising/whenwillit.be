@@ -2,6 +2,7 @@ $(function () {
 
     $("#response").hide();
 
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     var topClearance = 200;
     var selectedActionElement = $("ul#noun-list li:first");
     var currentAction;
@@ -78,29 +79,32 @@ $(function () {
 
             if(when > now)
             {
-                $("#event-tools-wrapper").show();
+                if(!isMobile)
+                {
+                    $("#event-tools-wrapper").show();
 
-                var startTime = moment(whenMoment).utc();
-                var endTime = moment(whenMoment).add("hours", 1).utc();
+                    var startTime = moment(whenMoment).utc();
+                    var endTime = moment(whenMoment).add("hours", 1).utc();
 
-                var eventDateFormat = "YYYYMMDDThhmmss[Z]";
-                var eventTitle = action.wwib + "!";
-                var eventDescription = "By http://whenwillit.be\r\n\r\nSee " + location.href + " for more details.";
-                var eventDateStringStart = startTime.format(eventDateFormat);
-                var eventDateStringStop = endTime.format(eventDateFormat);
+                    var eventDateFormat = "YYYYMMDDThhmmss[Z]";
+                    var eventTitle = action.wwib + "!";
+                    var eventDescription = "By http://whenwillit.be\r\n\r\nSee " + location.href + " for more details.";
+                    var eventDateStringStart = startTime.format(eventDateFormat);
+                    var eventDateStringStop = endTime.format(eventDateFormat);
 
-                // Setup our calendar buttons
-                var googleURL = "https://www.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(eventTitle) + "&dates=" + encodeURIComponent(eventDateStringStart) + "/" + eventDateStringStop + "&details=" + encodeURIComponent(eventDescription) +"&pli=1&uid=&sf=true&output=xml";
-                $("#add-to-google").attr("href", googleURL);
+                    // Setup our calendar buttons
+                    var googleURL = "https://www.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(eventTitle) + "&dates=" + encodeURIComponent(eventDateStringStart) + "/" + eventDateStringStop + "&details=" + encodeURIComponent(eventDescription) +"&pli=1&uid=&sf=true&output=xml";
+                    $("#add-to-google").attr("href", googleURL);
 
-                var yahooURL = "https://calendar.yahoo.com/?v=60&view=d&type=20&url=&title=" + encodeURIComponent(eventTitle) + "&st=" + encodeURIComponent(eventDateStringStart)  + "s&dur=-1700&desc=" + encodeURIComponent(eventDescription) + "&in_loc=&uid=";
-                $("#add-to-yahoo").attr("href", yahooURL);
+                    var yahooURL = "https://calendar.yahoo.com/?v=60&view=d&type=20&url=&title=" + encodeURIComponent(eventTitle) + "&st=" + encodeURIComponent(eventDateStringStart)  + "s&dur=-1700&desc=" + encodeURIComponent(eventDescription) + "&in_loc=&uid=";
+                    $("#add-to-yahoo").attr("href", yahooURL);
 
-                $("#add-to-ics").unbind().bind("click", function(){
+                    $("#add-to-ics").unbind().bind("click", function(){
 
-                    download_ics(action.wwib, eventTitle, eventDescription, "", eventDateStringStart, eventDateStringStop);
+                        download_ics(action.wwib, eventTitle, eventDescription, "", eventDateStringStart, eventDateStringStop);
 
-                });
+                    });
+                }
 
                 startCountdownTimer(when);
             }
@@ -397,50 +401,57 @@ $(function () {
         onSnap: processSelectedAction
     });
 
-    function onDragStarted()
-    {
-        isDragging = true;
-        $("#noun-list-container").css({"z-index" : 100});
-        $("#search-field-container").css({"z-index" : 50});
-        $("#search-field").prop('disabled', true);
-    }
-
-    function onDragStopped()
+    if(isMobile)
     {
         isDragging = false;
-        $("#noun-list-container").css({"z-index" : 50});
-        $("#search-field-container").css({"z-index" : 100});
-        $("#search-field").prop('disabled', false);
     }
-
-    var mouseDown = false;
-    $("#noun-list-container").bind('mousedown touchstart', function () {
-        mouseDown = true;
-    }).mouseup(function () {
-            mouseDown = false;
-        });
-
-    var movement = false;
-    $("#noun-list-container").bind('scroll touchmove', function () {
-
-        if (!movement && mouseDown) {
-            movement = true;
-            onDragStarted();
+    else
+    {
+        function onDragStarted()
+        {
+            isDragging = true;
+            $("#noun-list-container").css({"z-index" : 100});
+            $("#search-field-container").css({"z-index" : 50});
+            $("#search-field").prop('disabled', true);
         }
 
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(function () {
+        function onDragStopped()
+        {
+            isDragging = false;
+            $("#noun-list-container").css({"z-index" : 50});
+            $("#search-field-container").css({"z-index" : 100});
+            $("#search-field").prop('disabled', false);
+        }
 
-            if(mouseDown)
-            {
-                return;
+        var mouseDown = false;
+        $("#noun-list-container").bind('mousedown touchstart', function () {
+            mouseDown = true;
+        }).mouseup(function () {
+                mouseDown = false;
+            });
+
+        var movement = false;
+        $("#noun-list-container").bind('scroll touchmove', function () {
+
+            if (!movement && mouseDown) {
+                movement = true;
+                onDragStarted();
             }
 
-            movement = false;
-            onDragStopped();
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(function () {
 
-        }, 150);
-    });
+                if(mouseDown)
+                {
+                    return;
+                }
+
+                movement = false;
+                onDragStopped();
+
+            }, 150);
+        });
+    }
 
     $.each(wwibActions, function (index, action) {
 
