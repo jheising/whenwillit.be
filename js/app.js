@@ -15,7 +15,7 @@ $(function () {
     var locationFound = (userLat && userLon) ? true : false;
 
     function updateOverscroll() {
-        var newSize = $(window).height() - topClearance - 50;
+        var newSize = $(window).height() - topClearance - 74;
         $("#noun-list-container").css({"padding-bottom": newSize});
     }
 
@@ -407,14 +407,14 @@ $(function () {
     }
 
     var mouseDown = false;
-    $("#noun-list-container").mousedown(function () {
+    $("#noun-list-container").bind('mousedown touchstart', function () {
         mouseDown = true;
     }).mouseup(function () {
             mouseDown = false;
         });
 
     var movement = false;
-    $("#noun-list-container").bind('scroll', function () {
+    $("#noun-list-container").bind('scroll touchmove', function () {
 
         if (!movement && mouseDown) {
             movement = true;
