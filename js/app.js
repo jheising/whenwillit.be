@@ -456,7 +456,8 @@ $(function () {
 
         if(location.hash)
         {
-            navigateToActionElement($("li[data-action*='" + location.hash.replace("#", "") + "']"));
+            var actionString = decodeURIComponent(location.hash.replace("#", "").replace(/[+]/g, " "));
+            navigateToActionElement($("li[data-action*='" + actionString + "']"));
         }
     });
 });
