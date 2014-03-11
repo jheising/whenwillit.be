@@ -75,7 +75,17 @@ $(function () {
             $("#answer-time").text("NOW");
         }
         else {
-            startCountdownTimer(when);
+
+            if(when > now)
+            {
+                $("#event-tools-wrapper").show();
+
+                $("#atedrop1").attr("href", document.URL);
+                $("._summary").html("Test");
+
+                startCountdownTimer(when);
+            }
+
             $("#answer-time").text(whenMoment.calendar());
         }
 
@@ -211,6 +221,7 @@ $(function () {
 
         stopCountdownTimer();
         $("#loader").hide();
+        $("#event-tools-wrapper").hide();
 
         $("#response").fadeOut(function () {
 
@@ -270,6 +281,19 @@ $(function () {
         if (action && action.backgrounds && action.backgrounds.length) {
 
             var imageSource = action.backgrounds[getRandomInt(0, action.backgrounds.length - 1)];
+
+            if(_.isObject(imageSource))
+            {
+                $("#background-attribution").text(imageSource.attr_name).attr("href", imageSource.attr_link);
+                $("#background-attribution-container").show();
+
+                imageSource = imageSource.src;
+            }
+            else
+            {
+                $("#background-attribution-container").hide();
+            }
+
             var newBackground = $('<div class="full-background"></div>').css({"background-image": "url(" + imageSource + ")", "opacity": 0});
 
             $("#background-container").append(newBackground);
@@ -284,23 +308,26 @@ $(function () {
         }
     }
 
-    function nounClick(event) {
-
+    function navigateToActionElement(element)
+    {
         // Ignore clicks when the list is scrolling
-        if (isDragging) {
+        if (!element || element.length == 0 || isDragging) {
             return;
         }
 
         $("ul#noun-list li").show();
 
         var container = $("#noun-list-container");
-        var scrollTo = $(event.target);
+        var scrollTo = $(element);
 
         container.animate({scrollTop: scrollTo.position().top - container.position().top + container.scrollTop() - topClearance}, 250, function () {
             isDragging = false;
             processSelectedAction(scrollTo);
-            clickedNoun = false;
         });
+    }
+
+    function nounClick(event) {
+        navigateToActionElement(event.target);
     }
 
     // If the user starts typing, show search box
@@ -309,6 +336,18 @@ $(function () {
             $("#search-field").focus();
         }
     });*/
+
+    addthisevent.settings({
+        mouse     : true,
+        css       : false,
+        outlook   : {show:true, text:"Outlook Calendar"},
+        google    : {show:true, text:"Google Calendar"},
+        yahoo     : {show:true, text:"Yahoo Calendar"},
+        hotmail   : {show:true, text:"Hotmail Calendar"},
+        ical      : {show:true, text:"iCal Calendar"},
+        facebook  : {show:true, text:"Facebook Event"},
+        callback  : ""
+    });
 
     $("#search-field").focus(function () {
         $("#noun-list-container").scrollTop(0);
@@ -403,5 +442,13 @@ $(function () {
 
     $(window).resize(function () {
         updateOverscroll();
+    });
+
+    $("#main-container").fadeIn(function(){
+
+        if(location.hash)
+        {
+            navigateToActionElement($("li[data-action*='" + location.hash.replace("#", "") + "']"));
+        }
     });
 });

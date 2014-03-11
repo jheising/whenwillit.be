@@ -14,7 +14,20 @@ html, body
     height: 100%;
     overflow: hidden;
     background: #000;
+    height: 100%;
     font-family: 'Helvetica Neue', 'Helvetica-Neue', 'Helvetica', 'arial', sans-serif;
+}
+
+#wwib
+{
+    color: #fff;
+    text-decoration: none;
+}
+
+#wwib a:hover
+{
+    color: #fff;
+    text-decoration: none;
 }
 
 .big-text
@@ -80,6 +93,7 @@ html, body
 #main-container
 {
     height: 100%;
+    display: none;
 }
 
 #noun-list li
@@ -96,8 +110,8 @@ textarea:focus, input:focus, button:focus{
 #questionmark
 {
     position: absolute;
-    top: 0px;
-    right: 12px;
+    top: 3px;
+    right: 15px;
 }
 
 #search-field-container
@@ -231,6 +245,95 @@ textarea:focus, input:focus, button:focus{
 {
     background-color: rgba(255,255,255,0.5);
 }
+
+#event-tools-wrapper
+{
+    font-size: 12px;
+    margin-top: 15px;
+}
+
+#event-tools-wrapper a
+{
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+#background-attribution-container
+{
+    position: fixed;
+    z-index: 200;
+    bottom: 5px;
+    right: 5px;
+    color: #fff;
+    opacity: 0.5;
+    font-size: 11px;
+    display: none;
+    font-weight: 100;
+    letter-spacing: 1px;
+}
+
+#background-attribution-container a
+{
+    color: #fff;
+}
+
+a:hover.text-button
+{
+    text-decoration: none;
+}
+
+.text-button::before,
+.text-button::after
+{
+    display            : inline-block;
+    opacity            : 0;
+    -webkit-transition : -webkit-transform 0.3s, opacity 0.2s;
+    -moz-transition    : -moz-transform 0.3s, opacity 0.2s;
+    transition         : transform 0.3s, opacity 0.2s;
+}
+
+.text-button::before
+{
+    margin-right      : 5px;
+    content           : '[';
+    -webkit-transform : translateX(10px);
+    -moz-transform    : translateX(10px);
+    transform         : translateX(10px);
+}
+
+.text-button::after
+{
+    margin-left       : 5px;
+    content           : ']';
+    -webkit-transform : translateX(-10px);
+    -moz-transform    : translateX(-10px);
+    transform         : translateX(-10px);
+}
+
+.text-button:hover::before,
+.text-button:hover::after,
+.text-button:focus::before,
+.text-button:focus::after
+{
+    opacity           : 1;
+    -webkit-transform : translateX(0px);
+    -moz-transform    : translateX(0px);
+    transform         : translateX(0px);
+}
+
+.addthisevent-drop 						{display:inline-block;position:relative;z-index:999998;color:#333;text-decoration:none;text-decoration:none;}
+.addthisevent-drop:hover 				{color:#555;text-decoration:none;}
+.addthisevent-selected 					{}
+.addthisevent_dropdown 					{width:200px;position:absolute;z-index:99999;padding:6px 0px 0px 0px;background:#fff;text-align:left;display:none;margin-top:4px;margin-left:-1px;border-top:1px solid #c8c8c8;border-right:1px solid #bebebe;border-bottom:1px solid #a8a8a8;border-left:1px solid #bebebe;-moz-border-radius:2px;-webkit-border-radius:2px;-webkit-box-shadow:1px 3px 6px rgba(0,0,0,0.15);-moz-box-shadow:1px 3px 6px rgba(0,0,0,0.15);box-shadow:1px 3px 6px rgba(0,0,0,0.15);}
+.addthisevent_dropdown span 			{width:175px;display:block;line-height:110%;background:#fff;text-decoration:none;font-size:12px;color:#6d84b4;padding:8px 10px 9px 15px;}
+.addthisevent_dropdown span:hover 		{background:#f4f4f4;color:#6d84b4;text-decoration:none;font-size:12px;}
+.addthisevent span 						{display:none!important;}
+.addthisevent-drop ._url,.addthisevent-drop ._start,.addthisevent-drop ._end,.addthisevent-drop ._summary,.addthisevent-drop ._description,.addthisevent-drop ._location,.addthisevent-drop ._organizer,.addthisevent-drop ._organizer_email,.addthisevent-drop ._facebook_event,.addthisevent-drop ._all_day_event {display:none!important;}
+.addthisevent_dropdown .copyx 			{width:200px;height:21px;display:block;position:relative;cursor:default;}
+.addthisevent_dropdown .brx 			{width:180px;height:1px;overflow:hidden;background:#e0e0e0;position:absolute;z-index:100;left:10px;top:9px;}
+.addthisevent_dropdown .frs 			{position:absolute;top:5px;cursor:pointer;right:10px;padding-left:10px;font-style:normal;font-weight:normal;text-align:right;z-index:101;line-height:110%;background:#fff;text-decoration:none;font-size:9px;color:#cacaca;}
+.addthisevent_dropdown .frs:hover 		{color:#6d84b4;}
+.addthisevent 							{visibility:hidden;}
 
 @media (max-width: 1200px) {
 
