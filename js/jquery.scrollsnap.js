@@ -74,7 +74,10 @@
                         var endScroll = matchingEl['offset'+leftOrTop] + settings.offset,
                             animateProp = {};
                         animateProp['scroll'+leftOrTop] = endScroll;
-                        if ($scrollingEl['scroll'+leftOrTop]() != endScroll) {
+
+                        if ($scrollingEl['scroll'+leftOrTop]() != endScroll)
+                        {
+                            $(matchingEl).data("snapping", true);
                             $scrollingEl.animate(animateProp, settings.duration, settings.easing, debounce(function () {
                                 var $matchingEl = $(matchingEl);
 
@@ -85,6 +88,23 @@
                                 $matchingEl.trigger(settings.onSnapEvent);
 
                             }, settings.onSnapWait));
+                        }
+                        else
+                        {
+                            var $matchingEl = $(matchingEl);
+
+                            if($matchingEl.data("snapping"))
+                            {
+                                $(settings.snaps).data("snapping", false);
+                            }
+                            else
+                            {
+                                if (settings.onSnap) {
+                                    settings.onSnap($matchingEl);
+                                }
+
+                                $matchingEl.trigger(settings.onSnapEvent);
+                            }
                         }
                     }
 

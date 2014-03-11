@@ -204,6 +204,7 @@ $(function () {
     }
 
     function processSelectedAction(element) {
+
         isDragging = false;
         selectedActionElement = element;
         var action = element.data("action");
@@ -320,6 +321,7 @@ $(function () {
         var container = $("#noun-list-container");
         var scrollTo = $(element);
 
+        $(scrollTo).data("snapping", true);
         container.animate({scrollTop: scrollTo.position().top - container.position().top + container.scrollTop() - topClearance}, 250, function () {
             isDragging = false;
             processSelectedAction(scrollTo);
@@ -350,6 +352,7 @@ $(function () {
     });
 
     $("#search-field").focus(function () {
+        $("ul#noun-list li").data("snapping", true);
         $("#noun-list-container").scrollTop(0);
         isDragging = false;
         $("ul#noun-list li:first").animate({'opacity': 0.0});
@@ -413,7 +416,7 @@ $(function () {
     var movement = false;
     $("#noun-list-container").bind('scroll', function () {
 
-        if (!movement) {
+        if (!movement && mouseDown) {
             movement = true;
             onDragStarted();
         }
