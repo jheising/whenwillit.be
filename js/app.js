@@ -24,19 +24,16 @@ $(function () {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function setPlacename(placeName)
-    {
+    function setPlacename(placeName) {
         $.cookie('place_name', placeName, { expires: 365, path: '/' });
         userPlaceName = placeName;
     }
 
-    function setUserLocation(lat, lon, placeName)
-    {
+    function setUserLocation(lat, lon, placeName) {
         $.cookie('user_lat', lat.toString(), { expires: 365, path: '/' });
         $.cookie('user_lon', lon.toString(), { expires: 365, path: '/' });
 
-        if(placeName)
-        {
+        if (placeName) {
             setPlacename(placeName);
         }
 
@@ -47,9 +44,9 @@ $(function () {
 
     // Does this browser support geolocation?
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position){
+        navigator.geolocation.getCurrentPosition(function (position) {
             setUserLocation(position.coords.latitude, position.coords.longitude);
-        }, function(error){
+        }, function (error) {
 
         });
     }
@@ -57,8 +54,7 @@ $(function () {
     $("#loader").hide();
     $(".top-clearance").css({marginTop: topClearance});
 
-    function displayMessage(bigText, tinyText)
-    {
+    function displayMessage(bigText, tinyText) {
         $("#countdown").hide();
         $("#answer-source-container").hide();
         $("#answer-time").text(bigText);
@@ -77,10 +73,8 @@ $(function () {
         }
         else {
 
-            if(when > now)
-            {
-                if(!isMobile)
-                {
+            if (when > now) {
+                if (!isMobile) {
                     $("#event-tools-wrapper").show();
 
                     var startTime = moment(whenMoment).utc();
@@ -93,13 +87,13 @@ $(function () {
                     var eventDateStringStop = endTime.format(eventDateFormat);
 
                     // Setup our calendar buttons
-                    var googleURL = "https://www.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(eventTitle) + "&dates=" + encodeURIComponent(eventDateStringStart) + "/" + eventDateStringStop + "&details=" + encodeURIComponent(eventDescription) +"&pli=1&uid=&sf=true&output=xml";
+                    var googleURL = "https://www.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(eventTitle) + "&dates=" + encodeURIComponent(eventDateStringStart) + "/" + eventDateStringStop + "&details=" + encodeURIComponent(eventDescription) + "&pli=1&uid=&sf=true&output=xml";
                     $("#add-to-google").attr("href", googleURL);
 
-                    var yahooURL = "https://calendar.yahoo.com/?v=60&view=d&type=20&url=&title=" + encodeURIComponent(eventTitle) + "&st=" + encodeURIComponent(eventDateStringStart)  + "s&dur=-1700&desc=" + encodeURIComponent(eventDescription) + "&in_loc=&uid=";
+                    var yahooURL = "https://calendar.yahoo.com/?v=60&view=d&type=20&url=&title=" + encodeURIComponent(eventTitle) + "&st=" + encodeURIComponent(eventDateStringStart) + "s&dur=-1700&desc=" + encodeURIComponent(eventDescription) + "&in_loc=&uid=";
                     $("#add-to-yahoo").attr("href", yahooURL);
 
-                    $("#add-to-ics").unbind().bind("click", function(){
+                    $("#add-to-ics").unbind().bind("click", function () {
 
                         download_ics(action.wwib, eventTitle, eventDescription, "", eventDateStringStart, eventDateStringStop);
 
@@ -125,19 +119,16 @@ $(function () {
         $("#response").fadeIn();
     }
 
-    function processGeoLocationClick(event)
-    {
+    function processGeoLocationClick(event) {
         var geolocation = $(event.target).data("location");
         setUserLocation(geolocation.geometry.location.lat(), geolocation.geometry.location.lng());
 
-        if(selectedActionElement)
-        {
+        if (selectedActionElement) {
             processSelectedAction(selectedActionElement);
         }
     }
 
-    function displayAddressFinder()
-    {
+    function displayAddressFinder() {
         var locationMessage = "<p>We need to know your location before we can give you an answer. Try refreshing your browser after a few seconds or type your address or place here:</p>";
         locationMessage += '<p><div><input id="address-input"><button id="address-find-button">FIND</button></div><div id="address-results"></div></p>';
         locationMessage += '<p id="address-lookup-error"></p>';
@@ -151,49 +142,45 @@ $(function () {
             }
         });
 
-        $("#address-find-button").on("touchend click",function()
-        {
+        $("#address-find-button").on("touchend click", function () {
             $("#address-lookup-error").hide();
             $("#address-find-button").prop('disabled', true);
 
             var counter = 1;
-            var loadingTimer = setInterval(function(){
+            var loadingTimer = setInterval(function () {
 
                 $("#address-find-button").text(Array(counter + 1).join("."));
 
                 counter++;
 
-                if(counter >= 7)
-                {
+                if (counter >= 7) {
                     counter = 1;
                 }
             }, 1000);
 
             var geocoder = new google.maps.Geocoder();
 
-            geocoder.geocode({ 'address': $("#address-input").val() }, function(results, status) {
+            geocoder.geocode({ 'address': $("#address-input").val() }, function (results, status) {
 
                 clearInterval(loadingTimer);
                 $("#address-find-button").prop('disabled', false).text("FIND");
 
-                if (status == google.maps.GeocoderStatus.OK)
-                {
+                if (status == google.maps.GeocoderStatus.OK) {
                     var resultsList = $('<ul class="list-unstyled"></ul>');
 
                     $("#address-results").empty().append(resultsList).show();
 
                     resultsList.append($("<li>Select one:</li>"));
 
-                    _.each(results, function(result){
-                        var resultElement = $("<a></a>").text(result.formatted_address).data("location", result).on("touchend click",processGeoLocationClick);
+                    _.each(results, function (result) {
+                        var resultElement = $("<a></a>").text(result.formatted_address).data("location", result).on("touchend click", processGeoLocationClick);
                         resultsList.append($("<li></li>").append(resultElement));
                     });
                 }
                 else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
                     $("#address-lookup-error").text("Oops. We couldn't find this place. Try something else?").show();
                 }
-                else
-                {
+                else {
                     $("#address-lookup-error").text("Oops, something went wrong. Try again.").show();
                 }
             });
@@ -233,13 +220,11 @@ $(function () {
         var action = element.data("action");
 
         // Update Google analytics
-        if(action && action.wwib)
-        {
+        if (action && action.wwib) {
             location.hash = "#" + action.wwib;
             ga('send', 'event', 'action', 'completed', action.wwib);
         }
-        else
-        {
+        else {
             location.hash = "";
         }
 
@@ -256,8 +241,7 @@ $(function () {
                 currentAction = action.function;
 
                 // Does this action require location data?
-                if(action.requires_position && !locationFound)
-                {
+                if (action.requires_position && !locationFound) {
                     return displayAddressFinder();
                 }
 
@@ -288,8 +272,7 @@ $(function () {
 
                 }, userLat, userLon);
             }
-            else
-            {
+            else {
                 currentAction = null;
             }
         });
@@ -306,15 +289,13 @@ $(function () {
 
             var imageSource = action.backgrounds[getRandomInt(0, action.backgrounds.length - 1)];
 
-            if(_.isObject(imageSource))
-            {
+            if (_.isObject(imageSource)) {
                 $("#background-attribution").text(imageSource.attr_name).attr("href", imageSource.attr_link);
                 $("#background-attribution-container").show();
 
                 imageSource = imageSource.src;
             }
-            else
-            {
+            else {
                 $("#background-attribution-container").hide();
             }
 
@@ -332,8 +313,7 @@ $(function () {
         }
     }
 
-    function navigateToActionElement(element)
-    {
+    function navigateToActionElement(element) {
         // Ignore clicks when the list is scrolling
         if (!element || element.length == 0 || isDragging) {
             return;
@@ -357,10 +337,10 @@ $(function () {
 
     // If the user starts typing, show search box
     /*$(document).keypress(function (e) {
-        if (!$("#search-field").is(":focus")) {
-            $("#search-field").focus();
-        }
-    });*/
+     if (!$("#search-field").is(":focus")) {
+     $("#search-field").focus();
+     }
+     });*/
 
     $("#search-field").focus(function () {
         $("ul#noun-list li").data("snapping", true);
@@ -390,7 +370,7 @@ $(function () {
     });
 
     // When we click on a noun
-    $("ul#noun-list li").on("touchend click",nounClick);
+    $("ul#noun-list li").on("touchend click", nounClick);
 
     $("#noun-list-container").kinetic().css({"cursor": "pointer"});
 
@@ -401,61 +381,51 @@ $(function () {
         onSnap: processSelectedAction
     });
 
-    if(isMobile)
-    {
-        isDragging = false;
+    function onDragStarted() {
+        isDragging = true;
+        $("#noun-list-container").css({"z-index": 100});
+        $("#search-field-container").css({"z-index": 50});
+        $("#search-field").prop('disabled', true);
     }
-    else
-    {
-        function onDragStarted()
-        {
-            isDragging = true;
-            $("#noun-list-container").css({"z-index" : 100});
-            $("#search-field-container").css({"z-index" : 50});
-            $("#search-field").prop('disabled', true);
+
+    function onDragStopped() {
+        isDragging = false;
+        $("#noun-list-container").css({"z-index": 50});
+        $("#search-field-container").css({"z-index": 100});
+        $("#search-field").prop('disabled', false);
+    }
+
+    var mouseDown = false;
+    $("#noun-list-container").bind('mousedown touchstart',function () {
+        mouseDown = true;
+    }).bind('mouseup touchend', function () {
+            mouseDown = false;
+        });
+
+    var movement = false;
+    $("#noun-list-container").bind('scroll touchmove', function () {
+
+        if (!movement && mouseDown) {
+            movement = true;
+            onDragStarted();
         }
 
-        function onDragStopped()
-        {
-            isDragging = false;
-            $("#noun-list-container").css({"z-index" : 50});
-            $("#search-field-container").css({"z-index" : 100});
-            $("#search-field").prop('disabled', false);
-        }
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () {
 
-        var mouseDown = false;
-        $("#noun-list-container").bind('mousedown touchstart', function () {
-            mouseDown = true;
-        }).mouseup(function () {
-                mouseDown = false;
-            });
-
-        var movement = false;
-        $("#noun-list-container").bind('scroll touchmove', function () {
-
-            if (!movement && mouseDown) {
-                movement = true;
-                onDragStarted();
+            if (mouseDown) {
+                return;
             }
 
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(function () {
+            movement = false;
+            onDragStopped();
 
-                if(mouseDown)
-                {
-                    return;
-                }
-
-                movement = false;
-                onDragStopped();
-
-            }, 150);
-        });
-    }
+        }, 150);
+    });
 
     $.each(wwibActions, function (index, action) {
 
-        $("ul#noun-list").append($("<li></li>").attr({"data-action": action.wwib}).data("action", action).text(action.wwib).on("touchend click",nounClick));
+        $("ul#noun-list").append($("<li></li>").attr({"data-action": action.wwib}).data("action", action).text(action.wwib).on("touchend click", nounClick));
 
     });
 
@@ -466,14 +436,13 @@ $(function () {
     });
 
     // Prevent bounce in mobile Safari
-    $(document).on('touchmove',function(e){
+    $(document).on('touchmove', function (e) {
         e.preventDefault();
     });
 
-    $("#main-container").fadeIn(function(){
+    $("#main-container").fadeIn(function () {
 
-        if(location.hash)
-        {
+        if (location.hash) {
             var actionString = decodeURIComponent(location.hash.replace("#", "").replace(/[+]/g, " "));
             navigateToActionElement($("li[data-action*='" + actionString + "']"));
         }
