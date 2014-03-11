@@ -66,7 +66,7 @@ $(function () {
         $("#response").fadeIn();
     }
 
-    function displayAnswer(source, what, when) {
+    function displayAnswer(action, source, what, when) {
         var now = new Date();
         var whenMoment = moment(when);
 
@@ -80,8 +80,27 @@ $(function () {
             {
                 $("#event-tools-wrapper").show();
 
-                $("#atedrop1").attr("href", document.URL);
-                $("._summary").html("Test");
+                var startTime = moment(whenMoment).utc();
+                var endTime = moment(whenMoment).add("hours", 1).utc();
+
+                var eventDateFormat = "YYYYMMDDThhmmss[Z]";
+                var eventTitle = action.wwib + "!";
+                var eventDescription = "By http://whenwillit.be\r\n\r\nSee " + location.href + " for more details.";
+                var eventDateStringStart = startTime.format(eventDateFormat);
+                var eventDateStringStop = endTime.format(eventDateFormat);
+
+                // Setup our calendar buttons
+                var googleURL = "https://www.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(eventTitle) + "&dates=" + encodeURIComponent(eventDateStringStart) + "/" + eventDateStringStop + "&details=" + encodeURIComponent(eventDescription) +"&pli=1&uid=&sf=true&output=xml";
+                $("#add-to-google").attr("href", googleURL);
+
+                var yahooURL = "https://calendar.yahoo.com/?v=60&view=d&type=20&url=&title=" + encodeURIComponent(eventTitle) + "&st=" + encodeURIComponent(eventDateStringStart)  + "s&dur=-1700&desc=" + encodeURIComponent(eventDescription) + "&in_loc=&uid=";
+                $("#add-to-yahoo").attr("href", yahooURL);
+
+                $("#add-to-ics").unbind().bind("click", function(){
+
+                    download_ics(action.wwib, eventTitle, eventDescription, "", eventDateStringStart, eventDateStringStop);
+
+                });
 
                 startCountdownTimer(when);
             }
@@ -261,7 +280,7 @@ $(function () {
                         return;
                     }
 
-                    displayAnswer(action.source, response.what, response.when);
+                    displayAnswer(action, action.source, response.what, response.when);
 
                 }, userLat, userLon);
             }
@@ -338,18 +357,6 @@ $(function () {
             $("#search-field").focus();
         }
     });*/
-
-    addthisevent.settings({
-        mouse     : true,
-        css       : false,
-        outlook   : {show:true, text:"Outlook Calendar"},
-        google    : {show:true, text:"Google Calendar"},
-        yahoo     : {show:true, text:"Yahoo Calendar"},
-        hotmail   : {show:true, text:"Hotmail Calendar"},
-        ical      : {show:true, text:"iCal Calendar"},
-        facebook  : {show:true, text:"Facebook Event"},
-        callback  : ""
-    });
 
     $("#search-field").focus(function () {
         $("ul#noun-list li").data("snapping", true);
