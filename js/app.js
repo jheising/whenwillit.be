@@ -444,6 +444,11 @@ $(function () {
         updateOverscroll();
     });
 
+    // Prevent bounce in mobile Safari
+    $(document).on('touchmove',function(e){
+        e.preventDefault();
+    });
+
     $("#main-container").fadeIn(function(){
 
         if(location.hash)
