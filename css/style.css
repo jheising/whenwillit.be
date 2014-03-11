@@ -347,4 +347,19 @@ a:hover.text-button
         font-size: 36px;
     }
 
+    #countdown
+    {
+        letter-spacing: 0px;
+    }
+
+    #countdown span
+    {
+        font-size: 20px;
+        margin-right: 2px;
+    }
+
+    #answer-full-time
+    {
+        font-size: 10px;
+    }
 }
