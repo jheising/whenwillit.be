@@ -128,7 +128,7 @@ $(function () {
             }
         });
 
-        $("#address-find-button").click(function()
+        $("#address-find-button").on("touchend click",function()
         {
             $("#address-lookup-error").hide();
             $("#address-find-button").prop('disabled', true);
@@ -162,7 +162,7 @@ $(function () {
                     resultsList.append($("<li>Select one:</li>"));
 
                     _.each(results, function(result){
-                        var resultElement = $("<a></a>").text(result.formatted_address).data("location", result).click(processGeoLocationClick);
+                        var resultElement = $("<a></a>").text(result.formatted_address).data("location", result).on("touchend click",processGeoLocationClick);
                         resultsList.append($("<li></li>").append(resultElement));
                     });
                 }
@@ -376,7 +376,7 @@ $(function () {
     });
 
     // When we click on a noun
-    $("ul#noun-list li").click(nounClick);
+    $("ul#noun-list li").on("touchend click",nounClick);
 
     $("#noun-list-container").kinetic().css({"cursor": "pointer"});
 
@@ -434,7 +434,7 @@ $(function () {
 
     $.each(wwibActions, function (index, action) {
 
-        $("ul#noun-list").append($("<li></li>").attr({"data-action": action.wwib}).data("action", action).text(action.wwib).click(nounClick));
+        $("ul#noun-list").append($("<li></li>").attr({"data-action": action.wwib}).data("action", action).text(action.wwib).on("touchend click",nounClick));
 
     });
 
