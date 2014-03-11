@@ -264,7 +264,7 @@ var saveAs = saveAs || navigator.msSaveOrOpenBlob && navigator.msSaveOrOpenBlob.
 download_ics = function (e, t, n, r, i, s, o) {
     var o = typeof o !== "undefined" ? o : ".ics";
     if (navigator.userAgent.indexOf("MSIE") > -1 && navigator.userAgent.indexOf("MSIE 10") == -1) {
-        console.log("Unsupported Browser");
+        //console.log("Unsupported Browser");
         return
     }
     var t = t;
