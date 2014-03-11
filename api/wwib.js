@@ -146,6 +146,12 @@
         }*/
 
         // --------------- WWIB FUNCTIONS ---------------
+        self.drinkingTime = function (callback) {
+            var now = new Date();
+            now.setHours(17, 0, 0, 0);
+            processResponse("drinking time", now, callback);
+        }
+
         self.sunny = function (callback, lat, lon) {
             findWeatherConditions(lat, lon, "sunny", ["clear","sunny"], callback);
         }

@@ -111,5 +111,22 @@ var wwibActions =
             "function": "newMoon",
             "requires_position": false,
             "backgrounds": ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
+        },
+        {
+            "wwib": "drinking time",
+            "function": "drinkingTime",
+            "requires_position": false,
+            "backgrounds": [
+                {
+                    attr_link: "http://www.flickr.com/photos/29071316@N06/",
+                    attr_name: "sacks08",
+                    src: "http://farm5.staticflickr.com/4139/4940832005_e57c05a3ab_b.jpg"
+                },
+                {
+                    attr_link: "http://www.flickr.com/photos/14512792@N08/",
+                    attr_name: "nekidtroll",
+                    src: "http://farm3.staticflickr.com/2333/2487827101_a9310ffb5b_b.jpg"
+                }
+            ]
         }
     ];
