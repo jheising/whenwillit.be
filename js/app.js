@@ -63,17 +63,17 @@ $(function () {
         $("#response").fadeIn();
     }
 
-    function displayAnswer(action, source, what, when) {
+    function displayAnswer(action, source, what, whenStart, whenEnd) {
         var now = new Date();
-        var whenMoment = moment(when);
+        var whenMoment = moment(whenStart);
 
         // If this date is within 5 minutes, go ahead an call it now
-        if (Math.abs(now - when) * 1000 <= 300000) {
+        if ((whenEnd && now >= whenStart && now <= whenEnd) || Math.abs(now - whenStart) * 1000 <= 300000) {
             $("#answer-time").text("NOW");
         }
         else {
 
-            if (when > now) {
+            if (whenStart > now) {
                 if (!isMobile) {
                     $("#event-tools-wrapper").show();
 
@@ -100,7 +100,7 @@ $(function () {
                     });
                 }
 
-                startCountdownTimer(when);
+                startCountdownTimer(whenStart);
             }
 
             $("#answer-time").text(whenMoment.calendar());
@@ -130,7 +130,7 @@ $(function () {
 
     function displayAddressFinder() {
         var locationMessage = "<p>We need to know your location before we can give you an answer. Try refreshing your browser after a few seconds or type your address or place here:</p>";
-        locationMessage += '<p><div><input id="address-input"><button id="address-find-button">FIND</button></div><div id="address-results"></div></p>';
+        locationMessage += '<div id="address-input-container"><input id="address-input"><button id="address-find-button">FIND</button></div><div id="address-results"></div>';
         locationMessage += '<p id="address-lookup-error"></p>';
 
         $("#loader").hide();
@@ -198,7 +198,7 @@ $(function () {
                 case "days":
                 case "weeks":
                 case "daysLeft":
-                    $this.find('span.' + event.type).html(event.value);
+                    $this.find('div#' + event.type).html(event.value);
                     break;
                 case "finished":
                     $this.fadeTo('slow', .5);
@@ -215,6 +215,7 @@ $(function () {
 
     function processSelectedAction(element) {
 
+        $("#search-field").blur();
         isDragging = false;
         selectedActionElement = element;
         var action = element.data("action");
@@ -268,7 +269,7 @@ $(function () {
                         return;
                     }
 
-                    displayAnswer(action, action.source, response.what, response.when);
+                    displayAnswer(action, action.source, response.what, response.whenStart, response.whenEnd);
 
                 }, userLat, userLon);
             }
@@ -305,7 +306,7 @@ $(function () {
 
             $('<img>').attr('src', imageSource).load(function () {
                 fadeOldBackground();
-                newBackground.animate({'opacity': 0.5}, 500);
+                newBackground.animate({'opacity': 0.3}, 500);
             });
         }
         else {
@@ -347,19 +348,27 @@ $(function () {
         $("#noun-list-container").scrollTop(0);
         isDragging = false;
         $("ul#noun-list li:first").animate({'opacity': 0.0});
-    });
+    }).on('input', function () {
+        var searchValue = $(this).val().toLowerCase();
 
-    $("#search-field").on('input', function () {
-        if ($(this).val().length == 0) {
+        if (searchValue.length == 0) {
             $("ul#noun-list li").show();
         }
         else {
             $("ul#noun-list li").hide();
             $("ul#noun-list li:first").show();
-            $("li[data-action*='" + $(this).val() + "']").show();
+            $("li[data-action*='" + searchValue + "']").show();
             _showingAllNouns = false;
         }
-    });
+    }).on('keypress', function(e){
+
+            // If we press enter and there is only one item visible, go to it
+            if (e.which == 13 && $("ul#noun-list li:visible").length == 2)
+            {
+                $("#search-field").blur();
+                navigateToActionElement($("ul#noun-list li:visible").last());
+            }
+        });
 
     $("#search-field").focusout(function (event) {
         $(this).val("");
@@ -383,6 +392,7 @@ $(function () {
 
     function onDragStarted() {
         isDragging = true;
+        $("#search-field").blur();
         $("#noun-list-container").css({"z-index": 100});
         $("#search-field-container").css({"z-index": 50});
         $("#search-field").prop('disabled', true);

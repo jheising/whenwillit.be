@@ -168,13 +168,13 @@ textarea:focus, input:focus, button:focus{
     margin: 0;
     background-color: transparent;
     border: none;
-    padding: 5px 0px 10px 13px;
+    padding: 5px 0px 10px 20px;
 }
 
 #response
 {
     position: relative;
-    top: 172px;
+    top: 185px;
 }
 
 #answer-source-container
@@ -184,11 +184,17 @@ textarea:focus, input:focus, button:focus{
     top:-40px;
 }
 
+#address-input-container
+{
+    margin-top: 25px;
+}
+
 #answer-time
 {
     font-family: 'Bebas', sans-serif;
     font-size: 72px;
     -webkit-font-smoothing: antialiased;
+    line-height: 1;
 }
 
 #loader
@@ -208,19 +214,18 @@ textarea:focus, input:focus, button:focus{
     letter-spacing: 2px;
 }
 
-#countdown span
+#countdown .time-container
+{
+    float: left;
+    width: 80px;
+}
+
+#countdown div.time
 {
     font-family: 'Bebas', sans-serif;
     font-size: 25px;
     margin-right: 5px;
     -webkit-font-smoothing: antialiased;
-}
-
-#countdown div.slash
-{
-    display: inline;
-    margin-left: 5px;
-    margin-right: 5px;
 }
 
 #address-input
@@ -372,28 +377,10 @@ a:hover.text-button
         font-size: 46px;
     }
 
-    #countdown
-    {
-        letter-spacing: 0px;
-    }
-
     #wwib-wrapper
     {
         text-align: left;
         width: 270px;
-    }
-
-    #countdown span
-    {
-        font-size: 20px;
-        display: block;
-        line-height: 1;
-        margin-top: 10px;
-    }
-
-    #countdown div.slash
-    {
-        display: none;
     }
 
     #noun-list-container
@@ -403,7 +390,7 @@ a:hover.text-button
 
     #response
     {
-        top: 184px;
+        top: 192px;
     }
 
     #search-field-container
@@ -411,6 +398,11 @@ a:hover.text-button
         position: absolute;
         left: 165px;
         width: auto;
+    }
+
+    #countdown .time-container
+    {
+        width: 65px;
     }
 
     .small-text

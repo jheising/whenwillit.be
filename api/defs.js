@@ -83,14 +83,26 @@ var wwibActions =
             "backgrounds": ["http://farm3.staticflickr.com/2153/2145368868_5d2646242c_b.jpg"]
         },
         {
-            "wwib": "sunrise",
+            "wwib": "day",
             "function": "day",
             "requires_position": true,
             "backgrounds": ["http://farm4.staticflickr.com/3662/3305640342_6348a5a71e_b.jpg"]
         },
         {
-            "wwib": "sunset",
+            "wwib": "night",
             "function": "night",
+            "requires_position": true,
+            "backgrounds": ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
+        },
+        {
+            "wwib": "sunrise",
+            "function": "sunrise",
+            "requires_position": true,
+            "backgrounds": ["http://farm4.staticflickr.com/3662/3305640342_6348a5a71e_b.jpg"]
+        },
+        {
+            "wwib": "sunset",
+            "function": "sunset",
             "requires_position": true,
             "backgrounds": ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
         },
@@ -126,6 +138,30 @@ var wwibActions =
                     attr_link: "http://www.flickr.com/photos/14512792@N08/",
                     attr_name: "nekidtroll",
                     src: "http://farm3.staticflickr.com/2333/2487827101_a9310ffb5b_b.jpg"
+                }
+            ]
+        },
+        {
+            "wwib": "a leap year",
+            "function": "leapYear",
+            "requires_position": false,
+            "backgrounds": [
+                {
+                    attr_link: "http://www.flickr.com/photos/prem_kumar_sahani/",
+                    attr_name: "prem_kumar_sahani",
+                    src: "http://farm6.staticflickr.com/5302/5600041344_5a6cbf57e2_b.jpg"
+                }
+            ]
+        },
+        {
+            "wwib": "a new year",
+            "function": "newYear",
+            "requires_position": false,
+            "backgrounds": [
+                {
+                    attr_link: "http://www.flickr.com/photos/ianz/",
+                    attr_name: "ianz",
+                    src: "http://farm8.staticflickr.com/7304/11884148743_af6d26ba07_b.jpg"
                 }
             ]
         }

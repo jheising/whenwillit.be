@@ -16,7 +16,8 @@
 
     <!-- CSS
     ================================================== -->
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Favicons
@@ -61,30 +62,35 @@
             </div>
             <div class="row space">
                 <div id="countdown" class="col-xs-12">
-                    <span class="days"></span>
-                    Days
-                    <div class="slash">/</div>
-                    <span class="hours"></span>
-                    Hours
-                    <div class="slash">/</div>
-                    <span class="minutes"></span>
-                    Minutes
-                    <div class="slash">/</div>
-                    <span class="seconds"></span>
-                    Seconds
+                    <div class="time-container">
+                        <div class="time" id="days"></div>
+                        <div>Days</div>
+                    </div>
+                    <div class="time-container">
+                        <div class="time" id="hours"></div>
+                        <div>Hours</div>
+                    </div>
+                    <div class="time-container">
+                        <div class="time" id="minutes"></div>
+                        <div>Minutes</div>
+                    </div>
+                    <div class="time-container">
+                        <div class="time" id="seconds"></div>
+                        <div>Seconds</div>
+                    </div>
                 </div>
             </div>
             <div class="row space">
                 <div id="event-tools-wrapper" class="col-xs-12 small-text">
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled fa-ul">
                         <li>
-                            <a target="_blank" href="" title="Add to Google" class="text-button" id="add-to-google"><span class="glyphicon glyphicon-calendar"></span> Add To Google</a>
+                            <a target="_blank" href="" title="Add to Google" class="text-button" id="add-to-google"><i class="fa-li fa fa-calendar-o"></i> Add To Google</a>
                         </li>
                         <li>
-                            <a target="_blank" href="" title="Add to Yahoo!" class="text-button" id="add-to-yahoo"><span class="glyphicon glyphicon-calendar"></span> Add To Yahoo!</a>
+                            <a target="_blank" href="" title="Add to Yahoo!" class="text-button" id="add-to-yahoo"><i class="fa-li fa fa-calendar-o"></i> Add To Yahoo!</a>
                         </li>
                         <li>
-                            <a title="Download .ics" class="text-button" id="add-to-ics"><span class="glyphicon glyphicon-calendar"></span> Download .ics</a>
+                            <a title="Download .ics" class="text-button" id="add-to-ics"><i class="fa-li fa fa-calendar-o"></i> Download .ics</a>
                         </li>
                     </ul>
                 </div>

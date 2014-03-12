@@ -2,11 +2,12 @@
     var _wwib = function () {
         var self = this;
 
-        function processResponse(what, when, callback) {
+        function processResponse(what, whenStart, whenEnd, callback) {
 
             var response = {
                 what : what,
-                when : when
+                whenStart : whenStart,
+                whenEnd : whenEnd
             };
 
             callback(null, response);
@@ -61,7 +62,7 @@
 
                 if(!err && weatherData && _.contains(conditions, weatherData.weather[0].main.toLowerCase()))
                 {
-                    return processResponse(what, new Date(), callback);
+                    return processResponse(what, new Date(), null, callback);
                 }
 
                 getWeatherForecast(lat, lon, false, function (err, weatherData) {
@@ -77,7 +78,7 @@
                     }
 
                     if(condition)
-                        return processResponse(what, convertWeatherDate(condition.dt), callback);
+                        return processResponse(what, convertWeatherDate(condition.dt), null, callback);
                     else
                         return processNotFoundResponse(callback);
                 });
@@ -97,16 +98,47 @@
                 });
         }
 
-        function findSun(lat, lon, sunrise, what, callback)
+        function getSunRiseSet(date, lat, lon, returnOnlyInFuture, callback)
         {
             var now = new Date();
-            var suntimes = SunRiseSet(now.getFullYear(), now.getMonth() + 1, now.getDate(), lat, lon);
+            var suntimes = SunRiseSet(date.getFullYear(), date.getMonth() + 1, date.getDate(), lat, lon);
 
-            var suntime = sunrise ? suntimes[0] : suntimes[1];
+            var sunrise = suntimes[0];
+            var sunset = suntimes[1];
 
-            now.setUTCHours(0, 0, suntime * 3600);
+            var sunriseDate = new Date();
+            sunriseDate.setUTCHours(0, 0, sunrise * 3600);
+            sunriseDate.setDate(date.getDate());
+            sunriseDate.setMonth(date.getMonth());
 
-            processResponse(what, now, callback);
+            var sunsetDate = new Date();
+            sunsetDate.setUTCHours(0, 0, sunset * 3600);
+            sunsetDate.setDate(date.getDate());
+            sunsetDate.setMonth(date.getMonth());
+
+            // If the date has passed, try again for tomorrow
+            if(returnOnlyInFuture && (sunriseDate < now || sunsetDate < now))
+            {
+                now.setDate(now.getDate() + 1);
+                getSunRiseSet(now, lat, lon, returnOnlyInFuture, function(newSunriseDate, newSunsetDate){
+
+                    if(sunriseDate < now)
+                    {
+                        sunriseDate = newSunriseDate;
+                    }
+
+                    if(sunsetDate < now)
+                    {
+                        sunsetDate = newSunsetDate;
+                    }
+
+                    callback(sunriseDate, sunsetDate);
+                });
+            }
+            else
+            {
+                callback(sunriseDate, sunsetDate);
+            }
         }
 
         /*function findMoon(lat, lon, moonrise, what, callback)
@@ -147,9 +179,9 @@
 
         // --------------- WWIB FUNCTIONS ---------------
         self.drinkingTime = function (callback) {
-            var now = new Date();
-            now.setHours(17, 0, 0, 0);
-            processResponse("drinking time", now, callback);
+            var startTime = moment({hour: 17}); // 5:00 today
+            var endTime = moment({hour:9}).add({day:1}); // 9:00 tomorrow
+            processResponse("drinking time", startTime.toDate(), endTime.toDate(), callback);
         }
 
         self.sunny = function (callback, lat, lon) {
@@ -169,11 +201,57 @@
         }
 
         self.day = function(callback, lat, lon){
-            findSun(lat, lon, true, "sunrise", callback);
+
+            var now = new Date();
+
+            getSunRiseSet(now, lat, lon, false, function(sunrise, sunset)
+            {
+                if(now >= sunset)
+                {
+                    // Get the sunrise tomorrow
+                    getSunRiseSet(now, lat, lon, true, function(newSunrise, newSunset)
+                    {
+                        processResponse("day", newSunrise, null, callback);
+                    });
+                }
+                else
+                {
+                    processResponse("day", sunrise, sunset, callback);
+                }
+            });
         }
 
         self.night = function(callback, lat, lon){
-            findSun(lat, lon, false, "sunset", callback);
+
+            var now = new Date();
+
+            getSunRiseSet(now, lat, lon, false, function(sunrise, sunset)
+            {
+                if(now >= sunset)
+                {
+                    // Get the sunrise tomorrow
+                    getSunRiseSet(now, lat, lon, true, function(newSunrise, newSunset)
+                    {
+                        processResponse("day", sunset, newSunrise, callback);
+                    });
+                }
+                else
+                {
+                    processResponse("day", sunset, null, callback);
+                }
+            });
+        }
+
+        self.sunrise = function(callback, lat, lon){
+            getSunRiseSet(new Date(), lat, lon, true, function(sunrise, sunset){
+                processResponse("sunrise", sunrise, null, callback);
+            });
+        }
+
+        self.sunset = function(callback, lat, lon){
+            getSunRiseSet(new Date(), lat, lon, true, function(sunrise, sunset){
+                processResponse("sunset", sunset, null, callback);
+            });
         }
 
         self.windy = function (callback, lat, lon) {
@@ -191,13 +269,29 @@
         self.fullMoon = function(callback){
             var now = new Date();
             var eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[2]);
-            processResponse("full moon", eventDate, callback);
+
+            // If the date is in the past, try next month
+            if(eventDate < now)
+            {
+                now.setMonth(now.getMonth() + 1);
+                eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[2]);
+            }
+
+            processResponse("full moon", eventDate, null, callback);
         }
 
         self.newMoon = function(callback, lat, lon){
             var now = new Date();
             var eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[0]);
-            processResponse("new moon", eventDate, callback);
+
+            // If the date is in the past, try next month
+            if(eventDate < now)
+            {
+                now.setMonth(now.getMonth() + 1);
+                eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[0]);
+            }
+
+            processResponse("new moon", eventDate, null, callback);
         }
 
         self.moonRise = function(callback){
@@ -222,6 +316,40 @@
 
         // When will an airplane be arriving
         self.arriving = function(callback, flightInfo){
+        }
+
+        self.leapYear = function(callback)
+        {
+            var date = new Date();
+            var year = date.getFullYear();
+
+            // Move on if it's already passed
+            if(date.getMonth() >= 1 && date.getDay() >= 29)
+            {
+                year++;
+            }
+
+            while(!(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)))
+            {
+                year++;
+            }
+
+            date.setFullYear(year);
+            date.setMonth(1);
+            date.setDate(29);
+            date.setHours(0,0,0);
+
+            processResponse("leap year", date, null, callback);
+        }
+
+        self.newYear = function(callback)
+        {
+            var date = new Date();
+            date.setFullYear(date.getFullYear() + 1);
+            date.setDate(1);
+            date.setMonth(0);
+            date.setHours(0,0,0);
+            processResponse("new year", date, null, callback);
         }
     };
 
