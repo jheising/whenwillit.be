@@ -230,7 +230,7 @@ textarea:focus, input:focus, button:focus{
 
 #address-input
 {
-    width: 75%;
+    width: 300px;
     max-width: 320px;
     padding: 5px;
     padding-left: 10px;
@@ -260,7 +260,7 @@ textarea:focus, input:focus, button:focus{
     background-color: rgba(0,0,0,0.5);
     border: 1px rgba(255,255,255,0.5) solid;
     display: none;
-    width: 382px;
+    width: 362px;
     border-top: none;
     max-height: 160px;
     overflow-y: scroll;
@@ -372,9 +372,40 @@ a:hover.text-button
         font-size: 25px;
     }
 
+    #address-input
+    {
+        height: 37px;
+        width: 160px;
+    }
+
+    #address-find-button
+    {
+        height: 37px;
+    }
+
+    #address-results
+    {
+        width: 222px;
+    }
+
+    #countdown
+    {
+        font-size: 9px;
+    }
+
     #answer-time
     {
         font-size: 46px;
+    }
+
+    #address-find-button
+    {
+        height: 37px;
+    }
+
+    #loader
+    {
+        padding-top: 2px;
     }
 
     #wwib-wrapper
@@ -402,11 +433,11 @@ a:hover.text-button
 
     #countdown .time-container
     {
-        width: 65px;
+        width: 55px;
     }
 
     .small-text
     {
-        font-size: 10px;
+        font-size: 14px;
     }
 }

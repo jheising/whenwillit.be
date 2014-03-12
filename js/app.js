@@ -220,9 +220,10 @@ $(function () {
         selectedActionElement = element;
         var action = element.data("action");
 
-        // Update Google analytics
-        if (action && action.wwib) {
-            location.hash = "#" + action.wwib;
+        if (action && (action.wwib || action.anchor)) {
+            location.hash = "#" + (action.anchor || action.wwib);
+
+            // Update Google analytics
             ga('send', 'event', 'action', 'completed', action.wwib);
         }
         else {

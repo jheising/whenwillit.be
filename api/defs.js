@@ -108,6 +108,7 @@ var wwibActions =
         },
         {
             "wwib": "a full moon",
+            "anchor" : "full-moon",
             "function": "fullMoon",
             "requires_position": false,
             "backgrounds": [
@@ -120,6 +121,7 @@ var wwibActions =
         },
         {
             "wwib": "a new moon",
+            "anchor" : "new-moon",
             "function": "newMoon",
             "requires_position": false,
             "backgrounds": ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
@@ -143,6 +145,7 @@ var wwibActions =
         },
         {
             "wwib": "a leap year",
+            "anchor" : "leap-year",
             "function": "leapYear",
             "requires_position": false,
             "backgrounds": [
@@ -155,6 +158,7 @@ var wwibActions =
         },
         {
             "wwib": "a new year",
+            "anchor" : "new-year",
             "function": "newYear",
             "requires_position": false,
             "backgrounds": [
