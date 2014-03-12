@@ -21,8 +21,8 @@ $(function () {
     }
 
     function updateOverscroll() {
-        var newSize = $(window).height() - topClearance - 74;
-        $("#noun-list-container").css({"padding-bottom": newSize});
+        var newSize = $(window).height() - topClearance - 64;
+        $("#noun-list").css({"margin-bottom": newSize});
     }
 
     function getRandomInt(min, max) {
