@@ -20,7 +20,6 @@
 
 html, body
 {
-    -webkit-font-smoothing: subpixel-antialiased;
     color: #fff;
     height: 100%;
     overflow: hidden;

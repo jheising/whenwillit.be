@@ -15,6 +15,11 @@ $(function () {
 
     var locationFound = (userLat && userLon) ? true : false;
 
+    if(!/Chrome/i.test(navigator.userAgent) && !isMobile)
+    {
+        $("head").append("<style>.big-text{-webkit-text-stroke: 0.5px #fff;}</style>");
+    }
+
     function updateOverscroll() {
         var newSize = $(window).height() - topClearance - 74;
         $("#noun-list-container").css({"padding-bottom": newSize});
@@ -307,7 +312,7 @@ $(function () {
 
             $('<img>').attr('src', imageSource).load(function () {
                 fadeOldBackground();
-                newBackground.animate({'opacity': 0.3}, 500);
+                newBackground.animate({'opacity': 0.25}, 500);
             });
         }
         else {
