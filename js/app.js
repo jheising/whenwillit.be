@@ -220,6 +220,7 @@ $(function () {
 
     function processSelectedAction(element) {
 
+        $("#background-attribution-container").hide();
         $("#search-field").blur();
         isDragging = false;
         selectedActionElement = element;
