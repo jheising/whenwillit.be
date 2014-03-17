@@ -195,7 +195,7 @@ $(function () {
                 customURL += "&date=";
             }
 
-            customURL += eventDate.getTime();
+            customURL += eventDate.getTime() / 1000 / 60;
         }
 
         if(bgPicture)
@@ -583,7 +583,7 @@ $(function () {
         }
 
         // Treat the date as a number first
-        customDate = new Date(Number(customDateString));
+        customDate = new Date(Number(customDateString) * 60 * 1000);
 
         // If the date is invalid, try parsing it as a last resort
         if (!isValidDate(customDate)) {
