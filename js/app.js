@@ -1,3 +1,7 @@
+/*
+ ©2014 Jim Heising. All Rights Reserved.
+ */
+
 $(function () {
 
     $("#response").hide();
