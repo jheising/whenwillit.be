@@ -110,6 +110,7 @@ var wwibActions =
             "wwib": "a full moon",
             "anchor" : "full-moon",
             "function": "fullMoon",
+            "hide_time" : true,
             "requires_position": false,
             "backgrounds": [
                 {
@@ -123,11 +124,13 @@ var wwibActions =
             "wwib": "a new moon",
             "anchor" : "new-moon",
             "function": "newMoon",
+            "hide_time" : true,
             "requires_position": false,
             "backgrounds": ["http://farm4.staticflickr.com/3725/12694399804_48c56be6e8_b.jpg"]
         },
         {
             "wwib": "drinking time",
+            "anchor" : "drinking-time",
             "function": "drinkingTime",
             "requires_position": false,
             "backgrounds": [

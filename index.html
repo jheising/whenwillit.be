@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/classic.css">
+    <link rel="stylesheet" href="css/classic.date.css">
+    <link rel="stylesheet" href="css/classic.time.css">
 
     <!-- Favicons
     ================================================== -->
@@ -82,16 +85,16 @@
                 </div>
             </div>
             <div class="row space">
-                <div id="event-tools-wrapper" class="col-xs-12 small-text">
-                    <ul class="list-unstyled fa-ul">
+                <div id="event-tools-wrapper" class="col-xs-12">
+                    <ul class="list-unstyled smaller-text">
                         <li>
-                            <a target="_blank" href="" title="Add to Google" class="text-button" id="add-to-google"><i class="fa-li fa fa-calendar-o"></i> Add To Google</a>
+                            <a target="_blank" href="" title="Add to Google" id="add-to-google"><i class="fa fa-calendar-o"></i> Add To Google</a>
                         </li>
                         <li>
-                            <a target="_blank" href="" title="Add to Yahoo!" class="text-button" id="add-to-yahoo"><i class="fa-li fa fa-calendar-o"></i> Add To Yahoo!</a>
+                            <a target="_blank" href="" title="Add to Yahoo!" id="add-to-yahoo"><i class="fa fa-calendar-o"></i> Add To Yahoo!</a>
                         </li>
                         <li>
-                            <a title="Download .ics" class="text-button" id="add-to-ics"><i class="fa-li fa fa-calendar-o"></i> Download .ics</a>
+                            <a title="Download .ics" id="add-to-ics"><i class="fa fa-calendar-o"></i> Download .ics</a>
                         </li>
                     </ul>
                 </div>
@@ -102,7 +105,13 @@
         </div>
     </div>
 </div>
-
+<div id="header">
+    <div class="col-xs-6">
+        <div id="create-your-own-container">
+            <a id="create-your-own" class="smaller-text">create your own</a>
+        </div>
+    </div>
+</div>
 
 <!-- JS
 ================================================== -->
@@ -113,6 +122,9 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
 <script src="js/ics.js"></script>
+<script src="js/picker.js"></script>
+<script src="js/picker.date.js"></script>
+<script src="js/picker.time.js"></script>
 <script src="js/jquery.scrollstop.js"></script>
 <script src="js/jquery.easing.min.js"></script>
 <script src="js/jquery.scrollsnap.js"></script>
@@ -122,7 +134,7 @@
 <script src="api/wwib.js"></script>
 <script src="api/defs.js"></script>
 <script src="js/app.js"></script>
-
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;

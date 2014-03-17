@@ -12,12 +12,27 @@ $(function () {
     var userLat = $.cookie('user_lat') ? Number($.cookie('user_lat')) : undefined;
     var userLon = $.cookie('user_lon') ? Number($.cookie('user_lon')) : undefined;
     var userPlaceName = $.cookie('place_name');
+    var customAction;
+    var customDate;
+    var customDateHasTime = false;
 
     var locationFound = (userLat && userLon) ? true : false;
 
-    if(!/Chrome/i.test(navigator.userAgent) && !isMobile)
-    {
+    if (!/Chrome/i.test(navigator.userAgent) && !isMobile) {
         $("head").append("<style>.big-text{-webkit-text-stroke: 0.5px #fff;}</style>");
+    }
+
+    function isValidDate(d) {
+        if (Object.prototype.toString.call(d) !== "[object Date]")
+            return false;
+        return !isNaN(d.getTime());
+    }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
     function updateOverscroll() {
@@ -68,6 +83,7 @@ $(function () {
         $("#response").fadeIn();
     }
 
+
     function displayAnswer(action, source, what, whenStart, whenEnd) {
         var now = new Date();
         var whenMoment = moment(whenStart);
@@ -98,7 +114,7 @@ $(function () {
                     var yahooURL = "https://calendar.yahoo.com/?v=60&view=d&type=20&url=&title=" + encodeURIComponent(eventTitle) + "&st=" + encodeURIComponent(eventDateStringStart) + "s&dur=-1700&desc=" + encodeURIComponent(eventDescription) + "&in_loc=&uid=";
                     $("#add-to-yahoo").attr("href", yahooURL);
 
-                    $("#add-to-ics").unbind().bind("click", function () {
+                    $("#add-to-ics").unbind().on("click", function () {
 
                         download_ics(action.wwib, eventTitle, eventDescription, "", eventDateStringStart, eventDateStringStop);
 
@@ -108,10 +124,40 @@ $(function () {
                 startCountdownTimer(whenStart);
             }
 
+            if (action.hide_time) {
+                moment.lang('en', {
+                    calendar: {
+                        lastDay: '[Yesterday]',
+                        sameDay: '[Today]',
+                        nextDay: '[Tomorrow]',
+                        lastWeek: '[last] dddd',
+                        nextWeek: 'dddd',
+                        sameElse: 'L'
+                    }
+                });
+            }
+            else {
+                moment.lang('en', {
+                    calendar: {
+                        lastDay: '[Yesterday at] LT',
+                        sameDay: '[Today at] LT',
+                        nextDay: '[Tomorrow at] LT',
+                        lastWeek: '[last] dddd [at] LT',
+                        nextWeek: 'dddd [at] LT',
+                        sameElse: 'L'
+                    }
+                });
+            }
+
             $("#answer-time").text(whenMoment.calendar());
         }
 
-        $("#answer-full-time").text(whenMoment.format("dddd, MMMM Do YYYY @ h:mm:ss a")).show();
+        if (action.hide_time) {
+            $("#answer-full-time").text(whenMoment.format("dddd, MMMM Do YYYY")).show();
+        }
+        else {
+            $("#answer-full-time").text(whenMoment.format("dddd, MMMM Do YYYY @ h:mm:ss a")).show();
+        }
 
         if (source) {
             $("#answer-source").text(source.name).attr("href", source.url);
@@ -133,9 +179,88 @@ $(function () {
         }
     }
 
+    function createCustomLink(what, whenDate, whenTime, bgPicture) {
+        var eventDate = new Date(Date.parse(whenDate + " " + whenTime));
+
+        what = encodeURIComponent(what);
+        what = what.replace(/%20/g, "-");
+
+        var customURL = "http://whenwillit.be?what=" + what;
+
+        if (isValidDate(eventDate)) {
+            if (whenTime) {
+                customURL += "&datetime=";
+            }
+            else {
+                customURL += "&date=";
+            }
+
+            customURL += eventDate.getTime();
+        }
+
+        if(bgPicture)
+        {
+            customURL += "&bg=" + encodeURIComponent(bgPicture);
+        }
+
+        $("#custom-link").attr("href", customURL).text(customURL);
+    }
+
+    function displayCreateCustom() {
+
+        function doCustomLink() {
+            createCustomLink(
+                $('#what-input').val(),
+                $('#when-date-input').val(),
+                $('#when-time-input').val(),
+                $('#custom-bg-input').val()
+            );
+        }
+
+        $("#response").fadeOut(function () {
+            $("#event-tools-wrapper").hide();
+            var message = '<div class="row space"><div class="col-xs-2 text-right input-label">what?</div><div class="col-xs-10"><input id="what-input" class="custom"></div></div>';
+            message += '<div class="row space"><div class="col-xs-2 text-right input-label">when?</div><div class="col-xs-5"><input id="when-date-input" class="custom" placeholder="date"></div><div class="col-xs-5"><input id="when-time-input" class="custom" placeholder="time"></div></div>';
+            message += '<div class="row space"><div class="col-xs-2 text-right input-label">picture</div><div class="col-xs-10"><input id="custom-bg-input" class="custom" placeholder="a url to a custom background, or leave blank"></div></div>';
+            message += '<div class="row"><div class="col-xs-2 text-right input-label">link</div><div class="col-xs-10 input-label"><a id="custom-link"></a></div></div>';
+            //message += '<div class="row"><div class="col-xs-offset-2 col-xs-10 input-label"><ul class="list-inline"><li><a id="custom-twitter-share"><i class="fa fa-twitter-square"></i> Tweet</a></li></ul></div></div>';
+            displayMessage("CREATE YOUR OWN.", message);
+
+            $('#what-input').val(customAction).on("keyup change", doCustomLink);
+
+
+            if(customDate)
+            {
+                var customDateMoment = moment(customDate);
+
+                $('#when-date-input').attr("data-value", customDateMoment.format("MMMM D, YYYY"));
+
+                if(customDateHasTime)
+                {
+                    $('#when-time-input').attr("data-value", customDateMoment.format("h:mm A"));
+                }
+            }
+
+            $('#when-date-input').pickadate({
+                format: 'mmmm d, yyyy',
+                editable: true,
+                selectYears: true,
+                selectMonths: true
+            }).on("keyup change", doCustomLink);
+
+            $('#when-time-input').pickatime({
+                editable: true
+            }).on("keyup change", doCustomLink);
+
+            $('#custom-bg-input').on("keyup change", doCustomLink);
+
+            doCustomLink();
+        });
+    }
+
     function displayAddressFinder() {
         var locationMessage = "<p>We need to know your location before we can give you an answer. Try refreshing your browser after a few seconds or type your address or place here:</p>";
-        locationMessage += '<div id="address-input-container"><input id="address-input"><button id="address-find-button">FIND</button></div><div id="address-results"></div>';
+        locationMessage += '<div id="address-input-container"><input id="address-input" class="custom"><button id="address-find-button">FIND</button></div><div id="address-results"></div>';
         locationMessage += '<p id="address-lookup-error"></p>';
 
         $("#loader").hide();
@@ -226,7 +351,7 @@ $(function () {
         selectedActionElement = element;
         var action = element.data("action");
 
-        if (action && (action.wwib || action.anchor)) {
+        if (!customAction && action && (action.wwib || action.anchor)) {
             location.hash = "#" + (action.anchor || action.wwib);
 
             // Update Google analytics
@@ -265,12 +390,13 @@ $(function () {
                     if (err) {
                         if (err == "not found") {
                             $("#answer-time").text("UNCERTAIN.");
+                            $("#answer-full-time").hide();
                         }
                         else {
-                            $("#answer-time").text("OOPS. TRY AGAIN.");
+                            $("#answer-time").text("OOPS.");
+                            $("#answer-full-time").text(err.toString());
                         }
 
-                        $("#answer-full-time").hide();
                         $("#answer-source-container").hide();
                         $("#response").fadeIn();
                         return;
@@ -355,23 +481,22 @@ $(function () {
         $("#noun-list-container").scrollTop(0);
         isDragging = false;
         $("ul#noun-list li:first").animate({'opacity': 0.0});
-    }).on('input', function () {
-        var searchValue = $(this).val().toLowerCase();
+    }).on('input',function () {
+            var searchValue = $(this).val().toLowerCase();
 
-        if (searchValue.length == 0) {
-            $("ul#noun-list li").show();
-        }
-        else {
-            $("ul#noun-list li").hide();
-            $("ul#noun-list li:first").show();
-            $("li[data-action*='" + searchValue + "']").show();
-            _showingAllNouns = false;
-        }
-    }).on('keypress', function(e){
+            if (searchValue.length == 0) {
+                $("ul#noun-list li").show();
+            }
+            else {
+                $("ul#noun-list li").hide();
+                $("ul#noun-list li:first").show();
+                $("li[data-action*='" + searchValue + "']").show();
+                _showingAllNouns = false;
+            }
+        }).on('keypress', function (e) {
 
             // If we press enter and there is only one item visible, go to it
-            if (e.which == 13 && $("ul#noun-list li:visible").length == 2)
-            {
+            if (e.which == 13 && $("ul#noun-list li:visible").length == 2) {
                 $("#search-field").blur();
                 navigateToActionElement($("ul#noun-list li:visible").last());
             }
@@ -384,6 +509,8 @@ $(function () {
         }, 100);
         $("ul#noun-list li:first").animate({'opacity': 1.0});
     });
+
+    $("#create-your-own").on("touchend click", displayCreateCustom);
 
     // When we click on a noun
     $("ul#noun-list li").on("touchend click", nounClick);
@@ -413,14 +540,14 @@ $(function () {
     }
 
     var mouseDown = false;
-    $("#noun-list-container").bind('mousedown touchstart',function () {
+    $("#noun-list-container").on('mousedown touchstart',function () {
         mouseDown = true;
-    }).bind('mouseup touchend', function () {
+    }).on('mouseup touchend', function () {
             mouseDown = false;
         });
 
     var movement = false;
-    $("#noun-list-container").bind('scroll touchmove', function () {
+    $("#noun-list-container").on('scroll touchmove', function () {
 
         if (!movement && mouseDown) {
             movement = true;
@@ -440,9 +567,57 @@ $(function () {
         }, 150);
     });
 
+    // Has the user specified their own custom action?
+    customAction = getParameterByName("what");
+    if (customAction) {
+
+        customAction = decodeURIComponent(customAction.replace(/[+-]/g, " "));
+
+        customDateHasTime = true;
+        var customDateString = getParameterByName("datetime");
+        var customBackground = getParameterByName("bg");
+
+        if (!customDateString) {
+            customDateHasTime = false;
+            customDateString = getParameterByName("date");
+        }
+
+        // Treat the date as a number first
+        customDate = new Date(Number(customDateString));
+
+        // If the date is invalid, try parsing it as a last resort
+        if (!isValidDate(customDate)) {
+            customDate = new Date(Date.parse(customDateString));
+        }
+
+        // Add our custom wwib callback
+        wwib.custom = function (callback) {
+            if (!isValidDate(customDate)) {
+                return callback("This doesn't appear to be a valid date.");
+            }
+
+            wwib.processResponse(customAction, customDate, null, callback);
+        }
+
+        var actionDef = {
+            wwib: customAction,
+            requires_position: false,
+            anchor: "custom",
+            hide_time: !customDateHasTime,
+            function: "custom"
+        };
+
+        if(customBackground)
+        {
+            actionDef.backgrounds = [ customBackground ];
+        }
+
+        wwibActions.unshift(actionDef);
+    }
+
     $.each(wwibActions, function (index, action) {
 
-        $("ul#noun-list").append($("<li></li>").attr({"data-action": action.wwib}).data("action", action).text(action.wwib).on("touchend click", nounClick));
+        $("ul#noun-list").append($("<li></li>").attr({"data-action": action.wwib, "data-hash": (action.anchor || action.wwib)}).data("action", action).text(action.wwib).on("touchend click", nounClick));
 
     });
 
@@ -458,10 +633,11 @@ $(function () {
     });
 
     $("#main-container").fadeIn(function () {
-
-        if (location.hash) {
-            var actionString = decodeURIComponent(location.hash.replace("#", "").replace(/[+]/g, " "));
-            navigateToActionElement($("li[data-action*='" + actionString + "']"));
+        if (customAction) {
+            navigateToActionElement($("li[data-hash='custom']"));
+        }
+        else if (location.hash) {
+            navigateToActionElement($("li[data-hash='" + location.hash.replace("#", "") + "']"));
         }
     });
 });

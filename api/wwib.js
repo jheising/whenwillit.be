@@ -37,6 +37,15 @@
             });
         }
 
+        var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+        function dateDiffInDays(a, b) {
+            // Discard the time and time-zone information.
+            var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+            var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+            return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+        }
+
         function getWeatherForecast(lat, lon, daily, callback) {
             var url = "http://api.openweathermap.org/data/2.5/forecast";
 
@@ -119,8 +128,9 @@
             // If the date has passed, try again for tomorrow
             if(returnOnlyInFuture && (sunriseDate < now || sunsetDate < now))
             {
-                now.setDate(now.getDate() + 1);
-                getSunRiseSet(now, lat, lon, returnOnlyInFuture, function(newSunriseDate, newSunsetDate){
+                var tomorrow = new Date();
+                tomorrow.setDate(now.getDate() + 1);
+                getSunRiseSet(tomorrow, lat, lon, false, function(newSunriseDate, newSunsetDate){
 
                     if(sunriseDate < now)
                     {
@@ -178,6 +188,8 @@
         }*/
 
         // --------------- WWIB FUNCTIONS ---------------
+        self.processResponse = processResponse;
+
         self.drinkingTime = function (callback) {
             var startTime = moment({hour: 17}); // 5:00 today
             var endTime = moment({hour:9}).add({day:1}); // 9:00 tomorrow
@@ -271,7 +283,7 @@
             var eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[2]);
 
             // If the date is in the past, try next month
-            if(eventDate < now)
+            if(dateDiffInDays(now,eventDate) < 0)
             {
                 now.setMonth(now.getMonth() + 1);
                 eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[2]);
@@ -285,7 +297,7 @@
             var eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[0]);
 
             // If the date is in the past, try next month
-            if(eventDate < now)
+            if(dateDiffInDays(now,eventDate) < 0)
             {
                 now.setMonth(now.getMonth() + 1);
                 eventDate = jdtocd(MoonQuarters(now.getFullYear(), now.getMonth() + 1, now.getDate())[0]);
@@ -294,7 +306,7 @@
             processResponse("new moon", eventDate, null, callback);
         }
 
-        self.moonRise = function(callback){
+        self.moonRise = function(callback, lat, lon){
         }
 
         self.moonSet = function(callback, lat, lon){

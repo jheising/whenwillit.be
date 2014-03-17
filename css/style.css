@@ -26,6 +26,33 @@ html, body
     background: #000;
     height: 100%;
     font-family: 'Helvetica Neue', 'Helvetica-Neue', "district_prothin", 'Helvetica', 'arial', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+}
+
+a
+{
+    color: #DDD;
+    cursor: pointer;
+}
+
+a:hover
+{
+    text-decoration: none;
+}
+
+#header
+{
+    position: fixed;
+    left:0;
+    bottom:0;
+    width: 100%;
+    height: 32px;
+    background-color: #000000;
+    z-index: 2000;
+    line-height: 32px;
+    color: #AAAAAA;
+    font-size: 12px;
 }
 
 #wwib
@@ -45,12 +72,18 @@ html, body
     font-weight:100;
     font-size: 36px;
     line-height: 1.1;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .small-text
 {
-    font-weight:200;
     font-size: 15px;
+}
+
+.smaller-text
+{
+    font-size: 13px;
+    font-weight: normal;
 }
 
 .container
@@ -75,6 +108,17 @@ html, body
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
+}
+
+#create-your-own-container
+{
+    padding-left: 40%;
+}
+
+#create-your-own
+{
+    margin-left: 20px;
+    line-height: 32px;
 }
 
 #background-pattern {
@@ -156,6 +200,11 @@ textarea:focus, input:focus, button:focus{
     width: 60%;
 }
 
+.input-label
+{
+    margin-top: 8px;
+}
+
 .row.space
 {
     margin-bottom: 15px;
@@ -227,16 +276,21 @@ textarea:focus, input:focus, button:focus{
     -webkit-font-smoothing: antialiased;
 }
 
-#address-input
+input.custom
 {
-    width: 300px;
-    max-width: 320px;
     padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
     background-color: rgba(0,0,0,0.5);
     border: 1px rgba(255,255,255,0.5) solid;
     height: 36px;
+    width: 100%;
+}
+
+#address-input
+{
+    width: 300px;
+    max-width: 320px;
 }
 
 #address-find-button
@@ -272,11 +326,12 @@ textarea:focus, input:focus, button:focus{
     padding-left: 10px;
     padding-right: 10px;
     font-size: 13px;
+    font-weight: bold;
 }
 
-#address-results a
+#address-results li:first-of-type
 {
-    cursor: pointer;
+    font-weight: normal;
 }
 
 #address-find-button:hover
@@ -293,12 +348,6 @@ textarea:focus, input:focus, button:focus{
 #event-tools-wrapper li
 {
     padding-bottom: 5px;
-}
-
-#event-tools-wrapper a
-{
-    color: #FFFFFF;
-    cursor: pointer;
 }
 
 #background-attribution-container
@@ -364,6 +413,22 @@ a:hover.text-button
     transform         : translateX(0px);
 }
 
+::-webkit-input-placeholder {
+    opacity: 0.5;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    opacity: 0.5;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    opacity: 0.5;
+}
+
+:-ms-input-placeholder {
+    opacity: 0.5;
+}
+
 @media (max-width: 1200px) {
 
     .big-text
@@ -416,6 +481,16 @@ a:hover.text-button
     #noun-list-container
     {
         padding-left: 165px;
+    }
+
+    #create-your-own-container
+    {
+        padding-left: 165px;
+    }
+
+    #create-your-own
+    {
+        margin-left: 0;
     }
 
     #response
