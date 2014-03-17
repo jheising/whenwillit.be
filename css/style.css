@@ -362,7 +362,7 @@ input.custom
 
 #copyright-footer a
 {
-    opacity: 0.2;
+    opacity: 0.3;
 }
 
 #copyright-footer a:hover
@@ -378,7 +378,7 @@ input.custom
     color: #fff;
     font-size: 11px;
     display: none;
-    opacity: 0.2;
+    opacity: 0.3;
     font-weight: normal;
 }
 
