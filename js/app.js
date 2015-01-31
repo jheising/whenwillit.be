@@ -7,7 +7,7 @@ $(function () {
     $("#response").hide();
 
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    var topClearance = 200;
+    var topClearance = ($(window).width() <= 750) ? 20 : 200;
     var selectedActionElement = $("ul#noun-list li:first");
     var currentAction;
     var _showingAllNouns = true;
@@ -18,6 +18,7 @@ $(function () {
     var userPlaceName = $.cookie('place_name');
     var customAction;
     var customDate;
+    var customBackground;
     var customDateHasTime = false;
 
     var locationFound = (userLat && userLon) ? true : false;
@@ -232,7 +233,6 @@ $(function () {
 
             $('#what-input').val(customAction).on("keyup change", doCustomLink);
 
-
             if(customDate)
             {
                 var customDateMoment = moment(customDate);
@@ -256,7 +256,7 @@ $(function () {
                 editable: true
             }).on("keyup change", doCustomLink);
 
-            $('#custom-bg-input').on("keyup change", doCustomLink);
+            $('#custom-bg-input').val(customBackground).on("keyup change", doCustomLink);
 
             doCustomLink();
         });
@@ -443,7 +443,7 @@ $(function () {
 
             $('<img>').attr('src', imageSource).load(function () {
                 fadeOldBackground();
-                newBackground.animate({'opacity': 0.25}, 500);
+                newBackground.animate({'opacity': 0.75}, 500);
             });
         }
         else {
@@ -579,7 +579,7 @@ $(function () {
 
         customDateHasTime = true;
         var customDateString = getParameterByName("datetime");
-        var customBackground = getParameterByName("bg");
+        customBackground = getParameterByName("bg");
 
         if (!customDateString) {
             customDateHasTime = false;
