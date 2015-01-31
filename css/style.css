@@ -27,7 +27,7 @@ html, body
     height: 100%;
     font-family: 'Helvetica Neue', 'Helvetica-Neue', "district_prothin", 'Helvetica', 'arial', sans-serif;
     font-weight: 300;
-    -webkit-font-smoothing: antialiased;
+    text-shadow: 0px 0px 2px #000;
 }
 
 a
@@ -531,5 +531,32 @@ a:hover.text-button
     .small-text
     {
         font-size: 14px;
+    }
+}
+
+@media (max-width: 750px) {
+    #left-column {
+        height: 50%;
+    }
+
+    #noun-list-wrapper {
+        overflow: visible;
+    }
+
+    #response {
+        top: auto;
+        bottom: 0px;
+    }
+
+    #noun-list li {
+        height: 50px;
+    }
+
+    /*#noun-list-wrapper{
+        position: relative;
+    }*/
+
+    #noun-list-container {
+        padding-left: 0;
     }
 }
