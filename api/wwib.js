@@ -26,7 +26,9 @@
         }
 
         function getCurrentWeather(lat, lon, callback) {
-            var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon;
+            // Yes I know putting my APPID in here is wrong, but it's meant to be a static web app.
+            // If you feel like stealing my free APPID, then shame on you. I guess.
+            var url = "http://api.openweathermap.org/data/2.5/weather?APPID=b0771701200131843c3bbf08e46d5a4f&lat=" + lat + "&lon=" + lon;
 
             callAPI(url, function (err, data) {
                 if (err) {
