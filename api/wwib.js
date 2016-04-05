@@ -356,7 +356,7 @@
             var year = date.getFullYear();
 
             // Move on if it's already passed
-            if(date.getMonth() >= 1 && date.getDay() >= 29)
+            if(date.getMonth() > 2 || (date.getMonth() == 2 && date.getDay() >= 29))
             {
                 year++;
             }
@@ -372,7 +372,7 @@
             date.setHours(0,0,0);
 
             processResponse("leap year", date, null, callback);
-        }
+        };
 
         self.newYear = function(callback)
         {
