@@ -51,13 +51,13 @@
         }
 
         function getWeatherForecast(lat, lon, daily, callback) {
-            var url = "http://api.openweathermap.org/data/2.5/forecast?APPID=" + APPID;
+            var url = "http://api.openweathermap.org/data/2.5/forecast";
 
             if (daily) {
                 url += "/daily";
             }
 
-            url += "?lat=" + lat + "&lon=" + lon;
+            url += "?lat=" + lat + "&lon=" + lon + "&APPID=" + APPID;
 
             callAPI(url, function (err, data) {
                 if (err) {
@@ -75,7 +75,23 @@
 
                 if(!err && weatherData && _.contains(conditions, weatherData.weather[0].main.toLowerCase()))
                 {
-                    return processResponse(what, new Date(), null, callback);
+                    var now = new Date();
+
+                    if(what == "sunny") { // Only return sunny during daytime
+                        getSunRiseSet(now, lat, lon, false, function (sunrise, sunset) {
+                            if (now >= sunset) {
+                                return processNotFoundResponse(callback);
+                            }
+                            else {
+                                return processResponse(what, now, null, callback);
+                            }
+                        });
+
+                        return;
+                    }
+                    else {
+                        return processResponse(what, now, null, callback);
+                    }
                 }
 
                 getWeatherForecast(lat, lon, false, function (err, weatherData) {
@@ -235,7 +251,7 @@
                     processResponse("day", sunrise, sunset, callback);
                 }
             });
-        }
+        };
 
         self.night = function(callback, lat, lon){
 
