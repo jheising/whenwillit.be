@@ -123,6 +123,11 @@ a:hover
     display: inline-block;
 }
 
+.picker
+{
+    text-shadow: none;
+}
+
 #background-pattern {
     position: fixed;
     top: 0px;
